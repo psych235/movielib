@@ -1,0 +1,4 @@
+<% @directors.each do |director| %>
+  <%= "#{director.lname} <br />".html_safe %>
+<% end %>
+<%= link_to "Add Director", {action: :new} %>

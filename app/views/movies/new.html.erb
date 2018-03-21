@@ -1,0 +1,130 @@
+<style media="screen">
+  .select_tag {
+    width: 500px;
+  }
+</style>
+<%= form_for(@movie) do |f| %>
+  <p>
+    <%= f.label :title %>
+    <%= f.text_field :title %>
+  </p>
+  <p>
+    <%= f.label :rating %>
+    <%= f.select :rating, options_from_collection_for_select(MovieRating.all, :rating, :rating) %>
+  </p>
+  <p>
+    <%= f.label :year %>
+    <%= f.select :year, options_for_select((1900..Time.now.year).to_a.reverse) %>
+  </p>
+  <p>
+    <%= f.label :runtime %>
+    <%= f.text_field :runtime %>
+  </p>
+  <p>
+    <%= f.label :description %>
+    <%= f.text_area :description %>
+  </p>
+  <p>
+    <%= f.label :director_ids, "Director(s):" %>
+    <%= f.collection_select :director_ids, Director.all, :id, :name, {}, {multiple: true, class: "select_tag"} %>
+  </p>
+  <p>
+    OR New Director
+    <%= text_field_tag :director_fname %>
+    <%= text_field_tag :director_lname %>
+    <%= link_to "Add Director", nil, {class: "add_director"} %>
+  </p>
+  <p>
+    <%= f.label :actor_ids, "Actor(s):" %>
+    <%= f.collection_select :actor_ids, Actor.all, :id, :name, {}, {multiple: true, class: "select_tag"} %>
+  </p>
+  <p>
+    OR New Actor
+    <%= text_field_tag :actor_fname %>
+    <%= text_field_tag :actor_lname %>
+    <%= link_to "Add Actor", "#", {class: "add_actor"} %>
+  </p>
+  <p>
+    <%= link_to "Back to Welcome Page", {controller: :welcome, action: :index} %>
+    <%= f.submit "Add Movie" %>
+    <% if flash[:notice] %>
+      <div class="notice"><%= flash[:notice] %></div>
+    <% end %>
+    <% if flash[:error] %>
+      <div class="error"><%= flash[:error] %></div>
+    <% end %>
+  </p>
+<% end %>
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('#movie_director_ids').select2();
+    $('#movie_actor_ids').select2();
+    $('#movie_title').focus();
+  });
+
+  $('.add_director').on('click', function(e) {
+    e.preventDefault();
+
+    $.ajax({
+      url: '/directors/new_director',
+      type: 'POST',
+      dataType: 'json',
+      data: {
+        authenticity_token: $('[name="authenticity_token"]').val(),
+        director: {
+          fname: $('#director_fname').val(),
+          lname: $('#director_lname').val()
+        }}
+    })
+    .done(function(data) {
+      console.log("success");
+      console.log(data);
+      // $('#movie_director_ids').html("");
+      $.each(data, function(index, value) {
+        $('#director_fname').val(''),
+        $('#director_lname').val('')
+        $('#movie_director_ids').append('<option value="' + value.id + '">' + value.name + '</option>');
+      })
+    })
+    .fail(function() {
+      console.log("error");
+    })
+    .always(function() {
+      console.log("complete");
+    });
+
+  })
+
+  $('.add_actor').on('click', function(e) {
+    e.preventDefault();
+
+    $.ajax({
+      url: '/actors/new_actor',
+      type: 'POST',
+      dataType: 'json',
+      data: {
+        authenticity_token: $('[name="authenticity_token"]').val(),
+        actor: {
+          fname: $('#actor_fname').val(),
+          lname: $('#actor_lname').val()
+        }}
+    })
+    .done(function(data) {
+      console.log("success");
+      console.log(data);
+      // $('#movie_actor_ids').html("");
+      $.each(data, function(index, value) {
+        $('#actor_fname').val(''),
+        $('#actor_lname').val('')
+        $('#movie_actor_ids').append('<option value="' + value.id + '">' + value.name + '</option>');
+      })
+    })
+    .fail(function() {
+      console.log("error");
+    })
+    .always(function() {
+      console.log("complete");
+    });
+
+  })
+</script>

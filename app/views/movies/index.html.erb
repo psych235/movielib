@@ -1,0 +1,4 @@
+<% @movies.each do |movie| %>
+  <%= "#{movie.title} <br />".html_safe %>
+<% end %>
+<%= link_to "Add Movie", {action: :new} %>

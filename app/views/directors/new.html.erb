@@ -1,0 +1,28 @@
+<%= form_for(@director) do |f| %>
+  <p>
+    <%= f.label :fname %>
+    <%= f.text_field :fname %>
+  </p>
+  <p>
+    <%= f.label :lname %>
+    <%= f.text_field :lname %>
+  </p>
+  <p>
+    <%= f.label :bio %>
+    <%= f.text_area :bio %>
+  </p>
+  <p>
+    <%= f.label :birthdate %>
+    <%= f.text_field :birthdate %>
+  </p>
+  <p>
+    <%= link_to "Back to Welcome Page", {controller: :welcome, action: :index} %>
+    <%= f.submit "Add Director" %>
+    <% if flash[:notice] %>
+      <div class="notice"><%= flash[:notice] %></div>
+    <% end %>
+    <% if flash[:error] %>
+      <div class="error"><%= flash[:error] %></div>
+    <% end %>
+  </p>
+<% end %>

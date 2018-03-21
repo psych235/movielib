@@ -1,0 +1,10 @@
+<h1>Movie</h1>
+Title: <%= @movie.title %><br />
+Runtime: <%= @movie.runtime %><br />
+Description: <%= @movie.description %><br />
+Directors: <%= @movie.list_directors.try("join", ",") %> <br />
+Year: <%= @movie.year %><br />
+
+<%= link_to "Back to Welcome Screen", {controller: :welcome, action: :index} %>
+<%= link_to "Add Movie", new_movie_path %>
+<%= link_to "Add Director", new_director_path %>
